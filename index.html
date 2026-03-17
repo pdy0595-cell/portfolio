@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Park Dongyong | Product Design Portfolio</title>
+  <link rel="icon" href="./images/acac.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="./images/acac.ico" type="image/x-icon" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSans.css" rel="stylesheet" />
@@ -26,134 +28,150 @@
     *, *::before, *::after { box-sizing: border-box; }
     body { color: #4b4b4b !important; margin: 0; padding: 0; cursor: none; overflow-x: hidden; }
 
-    /* ── Cursor ── */
-    #PDY-cursor {
-      position: fixed; width: 10px; height: 10px;
-      background: #4b4b4b; border-radius: 50%;
-      pointer-events: none; z-index: 9999;
-      left: -300px; top: -300px;
-      transform: translate(-50%,-50%);
-      transition: width .3s ease, height .3s ease, opacity .3s ease;
-    }
-    #PDY-ring {
-      position: fixed; width: 36px; height: 36px;
-      border: 1px solid rgba(75,75,75,.4); border-radius: 50%;
-      pointer-events: none; z-index: 9998;
-      left: -300px; top: -300px;
-      transform: translate(-50%,-50%);
-      transition: width .4s ease, height .4s ease, border-color .3s ease;
-    }
+    #PDY-cursor { position: fixed; width: 10px; height: 10px; background: #4b4b4b; border-radius: 50%; pointer-events: none; z-index: 9999; left: -300px; top: -300px; transform: translate(-50%,-50%); transition: width .3s ease, height .3s ease, opacity .3s ease; }
+    #PDY-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(75,75,75,.4); border-radius: 50%; pointer-events: none; z-index: 9998; left: -300px; top: -300px; transform: translate(-50%,-50%); transition: width .4s ease, height .4s ease, border-color .3s ease; }
     body.c-link  #PDY-cursor { width: 4px; height: 4px; opacity: .5; }
     body.c-link  #PDY-ring   { width: 48px; height: 48px; border-color: #4b4b4b; }
     body.c-hover #PDY-cursor { width: 6px; height: 6px; }
     body.c-hover #PDY-ring   { width: 52px; height: 52px; border-color: rgba(75,75,75,.2); }
-
-    /* ── Scroll progress ── */
     #PDY-bar { position: fixed; top: 0; left: 0; width: 0; height: 2px; background: #4b4b4b; z-index: 10000; }
-
-    /* ── Page transition overlay — WHITE, right→left on navigate, left→right on back ── */
-    #PDY-overlay {
-      position: fixed; inset: 0;
-      background: white;
-      z-index: 99999; pointer-events: none;
-      transform: translateX(100%);
-      transition: transform 1.1s cubic-bezier(.76,0,.24,1);
-    }
-
-    /* ── Header ── */
+    #PDY-overlay { position: fixed; inset: 0; background: white; z-index: 99999; pointer-events: none; transform: translateX(100%); transition: transform 1.1s cubic-bezier(.76,0,.24,1); }
     header { position: sticky; top: 0; z-index: 1; height: 100vh; overflow: hidden; background: white; }
     .h-img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; will-change: transform; }
-
-    /* ── Stacking sections ── */
-    #about, main, footer { position: relative; z-index: 10; background: white; }
-
-    /* ── Typography ── */
-    .proj-title { font-size: clamp(2rem,5vw,4rem); font-weight: 700; color: white; }
+    #about, footer { position: relative; z-index: 10; background: white; }
     .didot { font-family: "Didot","Bodoni MT",serif; }
-
-    /* ── Bounce ── */
-    @keyframes bigBounce {
-      0%,100% { transform: translateY(-20px); animation-timing-function: cubic-bezier(.8,0,1,1); }
-      50%      { transform: translateY(20px);  animation-timing-function: cubic-bezier(0,0,.2,1); }
-    }
+    @keyframes bigBounce { 0%,100% { transform: translateY(-20px); animation-timing-function: cubic-bezier(.8,0,1,1); } 50% { transform: translateY(20px); animation-timing-function: cubic-bezier(0,0,.2,1); } }
     .bounce-anim { animation: bigBounce 1.8s infinite; }
-
-    /* ── Reveal ── */
     .rv { opacity: 0; transform: translateY(32px); transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
     .rv.on { opacity: 1; transform: translateY(0); }
-
-    /* ── Info row stagger ── */
     .irow { opacity: 0; transform: translateX(-10px); transition: opacity .45s ease, transform .45s ease; }
     .irow.on { opacity: 1; transform: translateX(0); }
-
-    /* ── Project card ── */
-    .proj-card { transition: transform .55s cubic-bezier(.16,1,.3,1); }
-    .proj-card:hover { transform: translateY(-4px); }
-
-    /* ── Project image wrap ── */
-    .pimg-wrap { position: relative; overflow: hidden; }
-    .pimg-wrap img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: grayscale(100%);
-      /* removed CSS transition — JS handles smooth reveal */
-    }
-    .pimg-wrap:hover img { filter: grayscale(0%); }
-    .pimg-wrap img { transition: filter .6s ease; }
-
-    .pimg-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 55%); transition: opacity .5s ease; }
-    .pimg-wrap:hover .pimg-grad { opacity: .75; }
-    .plabel { position: absolute; bottom: 2rem; left: 2rem; transition: transform .5s cubic-bezier(.16,1,.3,1); will-change: transform; }
-    .pimg-wrap:hover .plabel { transform: translateY(-6px); }
-
-    /* ── Team card — drop shadow hover, no gradient ── */
-    .tcard {
-      transition: background .35s ease, transform .4s cubic-bezier(.16,1,.3,1),
-                  box-shadow .4s cubic-bezier(.16,1,.3,1);
-    }
-    .tcard:hover {
-      background: #f9f9f9 !important;
-      transform: translateX(3px) translateY(-3px);
-      box-shadow: -4px 4px 24px rgba(75,75,75,.10), 0 2px 8px rgba(75,75,75,.06);
-    }
+    .tcard { transition: background .35s ease, transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s cubic-bezier(.16,1,.3,1); }
+    .tcard:hover { background: #f9f9f9 !important; transform: translateX(3px) translateY(-3px); box-shadow: -4px 4px 24px rgba(75,75,75,.10), 0 2px 8px rgba(75,75,75,.06); }
     .tcard p { transition: opacity .3s ease, color .3s ease; }
     .tcard:hover p { opacity: 1 !important; color: #1a1a1a; }
-
-    /* ── Tool icon ── */
     .ticon { opacity: .75; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s ease; }
     .ticon:hover { transform: scale(1.18) rotate(6deg); opacity: 1; }
-
-    /* ── Portfolio button ── */
-    .btn-pf {
-      position: relative; overflow: hidden;
-      display: inline-flex; align-items: center; gap: .5rem;
-      padding: .75rem 1.5rem; background: #4b4b4b; color: white;
-      border: 1px solid #4b4b4b; border-radius: 9999px;
-      font-weight: 700; font-size: .875rem; letter-spacing: .1em;
-      flex-shrink: 0; text-decoration: none; transition: color .35s ease;
-    }
-    .btn-pf::before {
-      content: ''; position: absolute; inset: 0; background: white;
-      transform: translateX(-101%); transition: transform .4s cubic-bezier(.16,1,.3,1); z-index: 0;
-    }
+    .btn-pf { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .5rem; padding: .75rem 1.5rem; background: #4b4b4b; color: white; border: 1px solid #4b4b4b; border-radius: 9999px; font-weight: 700; font-size: .875rem; letter-spacing: .1em; flex-shrink: 0; text-decoration: none; transition: color .35s ease; }
+    .btn-pf::before { content: ''; position: absolute; inset: 0; background: white; transform: translateX(-101%); transition: transform .4s cubic-bezier(.16,1,.3,1); z-index: 0; }
     .btn-pf:hover::before { transform: translateX(0); }
     .btn-pf:hover { color: #4b4b4b; }
     .btn-pf span, .btn-pf svg { position: relative; z-index: 1; }
     .btn-pf svg { width: 1rem; height: 1rem; transform: rotate(-45deg); transition: transform .3s ease; }
     .btn-pf:hover svg { transform: rotate(-45deg) translate(2px,-2px); }
-
-    /* ── Scroll top ── */
     #PDY-top { opacity: 0; pointer-events: none; transition: opacity .4s ease, background .3s ease, color .3s ease, transform .3s ease; }
     #PDY-top.on { opacity: 1; pointer-events: auto; }
     #PDY-top:hover { transform: scale(1.1); }
-
-    /* ── Contact link ── */
     .clink { position: relative; display: inline-block; }
     .clink::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: #4b4b4b; transition: width .4s cubic-bezier(.16,1,.3,1); }
     .clink:hover::after { width: 100%; }
 
+    /* ══════════════════════════════════════
+       PROJECTS — STICKY STACK (카드 2컬럼)
+    ══════════════════════════════════════ */
+    #work { position: relative; z-index: 10; }
+
+    .proj-stack-panel { position: sticky; top: 0; background: #ebebeb; }
+    #proj0 { z-index: 11; }
+    #proj1 { z-index: 12; }
+    #proj2 { z-index: 13; }
+    #proj3 { z-index: 14; }
+
+    /* 패널 내부 래퍼 */
+    .proj-stack-inner { padding: 2rem 2.5rem; }
+
+    /* Projects 타이틀 행 */
+    .proj-label-row { margin-bottom: 1rem; }
+
+    /* ── 카드: 좌우 2컬럼 ── */
+    .proj-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 0;
+    }
+
+    /* 왼쪽: 텍스트 영역 */
+    .proj-card-left {
+      padding: 3rem 3rem 3rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .proj-card-title {
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: #1a1a1a;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    .proj-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-bottom: 1.8rem;
+    }
+    .proj-card-meta p {
+      font-size: 0.85rem;
+      color: #888;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .proj-card-meta span.key {
+      min-width: 3rem;
+      color: #aaa;
+    }
+    .proj-card-desc {
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: #666;
+      line-height: 1.75;
+      flex: 1;
+      margin-bottom: 2rem;
+    }
+    .proj-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-style: italic;
+      border-bottom: 1.5px solid #1a1a1a;
+      padding-bottom: 2px;
+      width: fit-content;
+      transition: opacity .3s;
+    }
+    .proj-card-link:hover { opacity: 0.6; }
+    .proj-card-link svg { width: 1rem; height: 1rem; }
+
+    /* 오른쪽: 이미지 영역 */
+    .proj-card-right {
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .proj-card-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+      transition: filter .6s ease;
+      display: block;
+    }
+    .proj-card-right:hover img { filter: grayscale(0%); }
+    .proj-card-right { transition: transform .1s ease; transform-style: preserve-3d; }
+
+    .pimg-reveal { opacity: 0; transition: opacity .9s cubic-bezier(.16,1,.3,1); }
+
     @media (prefers-reduced-motion: reduce) {
       .rv, .irow { transition: none; opacity: 1; transform: none; }
       .bounce-anim { animation: none; }
+      .pimg-reveal { opacity: 1; }
     }
   </style>
 </head>
@@ -164,7 +182,6 @@
   <div id="PDY-bar"></div>
   <div id="PDY-overlay"></div>
 
-  <!-- HEADER -->
   <header class="w-full">
     <div class="relative w-full h-full">
       <img id="PDY-hero" src="./images/title3.png" alt="Hero Banner" class="h-img grayscale opacity-90" />
@@ -177,7 +194,6 @@
     </div>
   </header>
 
-  <!-- ABOUT -->
   <section id="about" class="py-24 px-6 flex justify-center">
     <div class="max-w-6xl w-full mx-auto">
       <div class="mb-20 w-fit rv">
@@ -188,7 +204,6 @@
       </div>
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
         <div class="lg:col-span-5 space-y-11">
-
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Information</h3>
             <div class="flex font-light items-start gap-8">
@@ -204,7 +219,6 @@
               </div>
             </div>
           </section>
-
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Career</h3>
             <div class="flex items-baseline text-[14px] whitespace-nowrap gap-4">
@@ -213,12 +227,10 @@
               <span class="opacity-40 text-[11px] shrink-0">2023.07 - 2024.03</span>
             </div>
           </section>
-
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Strengths</h3>
             <p class="text-[14px] font-light leading-relaxed opacity-80">개발 실무 경험을 바탕으로 구현 가능성을 고려한 설계를 지향하며,<br/>이를 기반으로 팀 내 원활한 협업과 효율적인 커뮤니케이션을 이끌어냅니다.</p>
           </section>
-
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Tools</h3>
             <div class="inline-grid grid-cols-3 gap-x-4 gap-y-3">
@@ -230,7 +242,6 @@
               <div class="ticon w-12 h-12 rounded-lg flex items-center justify-center"><img src="./images/js.png" alt="JavaScript" class="object-contain w-full h-full"/></div>
             </div>
           </section>
-
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Education</h3>
             <div class="space-y-4">
@@ -244,9 +255,7 @@
               </div>
             </div>
           </section>
-
         </div>
-
         <div class="lg:col-span-7">
           <h3 class="text-2xl font-medium mb-4 tracking-tight rv">Voices from Teammates</h3>
           <div class="space-y-4">
@@ -261,138 +270,153 @@
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <main class="py-12 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="mb-20 w-fit rv">
-        <h2 class="text-4xl font-bold tracking-widest py-2 didot italic" style="color:#4b4b4b">Projects</h2>
-      </div>
+  <div id="work">
 
-      <section class="mb-32 proj-card" id="proj0">
-        <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
-          <img alt="moa Project" src="./images/moa.png"/>
-          <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">신규 서비스 기획 프로젝트</h6></div>
+    <!-- proj0 -->
+    <section class="proj-stack-panel" id="proj0">
+      <div class="proj-stack-inner">
+        <div class="proj-label-row rv">
+          <h2 class="text-4xl font-bold tracking-widest py-1 didot italic" style="color:#4b4b4b">Projects</h2>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
-          <div class="max-w-4xl">
-            <p class="opacity-60 text-sm text-gray-400">기간&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025.12.26~2025.01.16</p>
-            <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6인</p>
-            <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 65% · UX 70% · UI 70%</p>
-            <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">감정과 일정 데이터를 한곳에 모아 기록·분석하고, 이를 소비 패턴과
-                연결해 <br />올바른 소비 습관 형성을 돕는 신규 자산관리 서비스
-                ‘moa’입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">‘moa’는 2026년 경제 트렌드로 주목받는 ‘필코노미(Fell +
-                conomy)’—감정이 소비를 주도하는 흐름—에 주목했습니다.<br />
+        <div class="proj-card">
+          <!-- 왼쪽: 텍스트 -->
+          <div class="proj-card-left">
+            <div>
+              <h3 class="proj-card-title">자산관리 신규서비스<br>기획 프로젝트</h3>
+              <div class="proj-card-meta">
+                <p><span class="key">기간</span> 2025.12.26~2026.01.16</p>
+                <p><span class="key">구성원</span> 6인</p>
+                <p><span class="key">기여도</span> 기획 65% · UX 70% · UI 70%</p>
+              </div>
+              <p class="proj-card-desc">감정과 일정 데이터를 한곳에 모아 기록·분석하고, 이를 소비 패턴과 연결해 올바른 소비 습관 형성을 돕는 <br />신규 자산관리 서비스 'moa'입니다.<br><br>‘moa’는 2026년 경제 트렌드로 주목받는 ‘필코노미(Fell +
+                conomy)’—감정이 소비를 주도하는 흐름—에 주목했습니다.
                 개인의 감정 상태가 자산 관리에 직접적인 영향을 미친다는 관점에서
-                출발해, 감정·일정 데이터를 시각화하여 자신의 상태와 소비의
-                <br />상관관계를 직관적으로 인지할 수 있도록 설계했습니다. 또한
+                출발해, 감정·일정 <br />데이터를 시각화하여 자신의 상태와 소비의
+                상관관계를 직관적으로 인지할 수 있도록 설계했습니다. <br />또한
                 캐릭터와 보상 요소를 결합해 기록의 지속성과 몰입도를 높이고,
-                단순한 <br />가계부를 넘어 ‘감정 기반 소비 관리 경험’을
+                단순한 가계부를 넘어 <br />‘감정 기반 소비 관리 경험’을
                 제공합니다. 데이터 기반의 자기 이해를 통해 감정에 휘둘리는
-                소비가 아닌, 스스로 통제 <br />가능한 자산 흐름을 만들어가는 데
+                소비가 아닌, <br />스스로 통제 가능한 자산 흐름을 만들어가는 데
                 초점을 둔 신규 서비스 기획 프로젝트입니다.</p>
+            </div>
+            <a href="./pofol_4/index.html" class="proj-card-link pf-nav">full portfolio <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></a>
           </div>
-          <a href="./pofol_4/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <!-- 오른쪽: 이미지 -->
+          <div class="proj-card-right pimg-reveal">
+            <img alt="moa Project" src="./images/moa1.png"/>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="mb-32 proj-card" id="proj1">
-        <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
-          <img alt="Yeoptteok Project" src="./images/yt.png"/>
-          <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">UX/UI 분석 및 개선 프로젝트</h6></div>
+    <!-- proj1 -->
+    <section class="proj-stack-panel" id="proj1">
+      <div class="proj-stack-inner">
+        <div class="proj-label-row" style="visibility:hidden;">
+          <h2 class="text-4xl font-bold tracking-widest py-1 didot italic">Projects</h2>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
-          <div class="max-w-4xl">
-            <p class="opacity-60 text-sm text-gray-400">기간&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025.12.03~2025.12.24</p>
-            <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6인</p>
-            <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 75% · UX 70% · UI 80%</p>
-            <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">기존 엽기떡볶이 앱의 전반적인 UX 문제를 분석하고,<br />
-                새로운 UI를 통해 이를 개선한 리디자인 프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
+        <div class="proj-card">
+          <div class="proj-card-left">
+            <div>
+              <h3 class="proj-card-title">UX/UI 분석 및<br>개선 프로젝트</h3>
+              <div class="proj-card-meta">
+                <p><span class="key">기간</span> 2025.12.03~2025.12.24</p>
+                <p><span class="key">구성원</span> 6인</p>
+                <p><span class="key">기여도</span> 기획 75% · UX 70% · UI 80%</p>
+              </div>
+              <p class="proj-card-desc">기존 엽기떡볶이 앱의 전반적인 UX 문제를 분석하고, 새로운 UI를 통해 <br />이를 개선한 리디자인 프로젝트입니다.<br><br>
                 리서치와 설문을 통해 앱 디자인에 대한 불만과 엽떡의 양에 대한
-                부담감이라는 핵심 페인포인트를 도출했습니다.<br />
-                이를 바탕으로 보다 친절하고 섬세한 UX 흐름을 설계하고, 앱
-                진입부터 탐색·주문까지 이탈 없이 이어지는 새로운 시스템을
-                <br />제안했습니다. 또한 사용성 테스트를 통해 재구성한 주문
-                과정, 메뉴 이해 구조, 정보 전달 방식을 검증하고 피드백을 반영해
-                완성도를 <br />높였습니다. 브랜드의 기존 운영 방식은
+                부담감이라는 핵심 페인포인트를 <br />도출했습니다.이를 바탕으로 보다 친절하고 섬세한 UX 흐름을 설계하고, 앱
+                진입부터 탐색·주문까지 <br />이탈 없이 이어지는 새로운 시스템을
+                제안했습니다. 또한 사용성 테스트를 통해 재구성한 주문
+                과정, 메뉴 <br />이해 구조, 정보 전달 방식을 검증하고 피드백을 반영해
+                완성도를 높였습니다. 브랜드의 기존 운영 방식은<br />
                 유지하면서도 변화한 소비 환경에 맞는 새로운 경험을 제안하여,
-                사용자가 더 쉽고 부담 없이 <br />주문할 수 있도록 서비스 흐름
+                사용자가 더 쉽고 부담 없이 주문할 수 <br />있도록 서비스 흐름
                 전반을 개선했습니다.</p>
+            </div>
+            <a href="./pofol_3/index.html" class="proj-card-link pf-nav">full portfolio <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></a>
           </div>
-          <a href="./pofol_3/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <div class="proj-card-right pimg-reveal">
+            <img alt="Yeoptteok Project" src="./images/yt1.png"/>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="mb-32 proj-card" id="proj2">
-        <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
-          <img alt="socar Project" src="./images/socar.png"/>
-          <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">VOC분석을 통한 솔루션 제안 프로젝트</h6></div>
+    <!-- proj2 -->
+    <section class="proj-stack-panel" id="proj2">
+      <div class="proj-stack-inner">
+        <div class="proj-label-row" style="visibility:hidden;">
+          <h2 class="text-4xl font-bold tracking-widest py-1 didot italic">Projects</h2>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
-          <div class="max-w-4xl">
-            <p class="opacity-60 text-sm text-gray-400">기간&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025.11.26~2025.12.02</p>
-            <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6인</p>
-            <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 70% · UX 80% · UI 75%</p>
-            <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">“명확한 요금을 인지하지 못한다”라는 VOC를 기반으로, <br />투명한
-                정보 전달과 신뢰도 높은 사용 경험을 설계한 쏘카 UX 리디자인
-                프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
-                리서치를 통해 사용자가 요금 구조를 직관적으로 이해하지 못하고,
-                이용 과정 전반에서 최종 결제 금액에 대한 불안과 혼란을<br />
+        <div class="proj-card">
+          <div class="proj-card-left">
+            <div>
+              <h3 class="proj-card-title">VOC분석을 통한<br>솔루션 제안 프로젝트</h3>
+              <div class="proj-card-meta">
+                <p><span class="key">기간</span> 2025.11.26~2025.12.02</p>
+                <p><span class="key">구성원</span> 6인</p>
+                <p><span class="key">기여도</span> 기획 70% · UX 80% · UI 75%</p>
+              </div>
+              <p class="proj-card-desc">"명확한 요금을 인지하지 못한다"라는 VOC를 기반으로, 투명한 정보 전달과 신뢰도 높은 사용 경험을 <br />설계한 쏘카 UX 리디자인 프로젝트입니다.<br><br>리서치를 통해 사용자가 요금 구조를 직관적으로 이해하지 못하고,
+                이용 과정 전반에서 최종 결제 금액에 <br />대한 불안과 혼란을
                 느낀다는 핵심 문제를 정의했습니다. 특히 이용 전·중·후에 안내되는
-                요금 정보가 분산되어 있어 금액 흐름을 한눈에 파악하기<br />
-                어렵다는 점에 주목했습니다. 이를 해결하기 위해 요금 안내 구조를
-                재정비하고 UX Writing과 Micro Copy를 개선해 정보의<br />
-                명확성을 높였습니다. 또한 실시간 요금 계산 기능을 제안해 변동
-                금액을 즉시 확인할 수 있도록 설계함으로써, 최종 결제에<br />
-                대한 부담을 줄이고 서비스에 대한 신뢰를 강화하는 것을 목표로
+                요금 정보가 <br />분산되어 있어 금액 흐름을 한눈에 파악하기
+                어렵다는 점에 주목했습니다. 이를 해결하기 위해 요금 안내 <br />구조를
+                재정비하고 UX Writing과 Micro Copy를 개선해 정보의
+                명확성을 높였습니다. 또한 실시간 요금 <br />계산 기능을 제안해 변동
+                금액을 즉시 확인할 수 있도록 설계함으로써, 최종 결제에
+                대한 부담을 줄이고 <br />서비스에 대한 신뢰를 강화하는 것을 목표로
                 했습니다.</p>
+            </div>
+            <a href="./pofol_2/index.html" class="proj-card-link pf-nav">full portfolio <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></a>
           </div>
-          <a href="./pofol_2/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <div class="proj-card-right pimg-reveal">
+            <img alt="socar Project" src="./images/socar1.png"/>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="mb-32 proj-card" id="proj3">
-        <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
-          <img alt="baemin Project" src="./images/bae.png"/>
-          <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">핵심 기능 집중 개선 프로젝트</h6></div>
+    <!-- proj3 -->
+    <section class="proj-stack-panel" id="proj3">
+      <div class="proj-stack-inner">
+        <div class="proj-label-row" style="visibility:hidden;">
+          <h2 class="text-4xl font-bold tracking-widest py-1 didot italic">Projects</h2>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
-          <div class="max-w-4xl">
-            <p class="opacity-60 text-sm text-gray-400">기간&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2025.09.25~2025.11.20</p>
-            <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;개인 프로젝트</p>
-            <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 · UX · UI 100%</p>
-            <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">현재의 리뷰 시스템에서 사용자들이 체감하는 리뷰 신뢰도 문제를
-                탐구한 프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
-                인터뷰와 사용자 조사를 통해 리뷰에서 핵심 정보를 빠르게 파악하기
-                어렵고, 필요한 정보를 선별하는 과정에서 피로도가 높아진다는
-                <br />문제를 도출했습니다. 이를 해결하기 위해 리뷰를 Textless의
+        <div class="proj-card">
+          <div class="proj-card-left">
+            <div>
+              <h3 class="proj-card-title">핵심 기능 집중<br>개선 프로젝트</h3>
+              <div class="proj-card-meta">
+                <p><span class="key">기간</span> 2025.09.25~2025.11.20</p>
+                <p><span class="key">구성원</span> 개인 프로젝트</p>
+                <p><span class="key">기여도</span> 기획 · UX · UI 100%</p>
+              </div>
+              <p class="proj-card-desc">현재의 리뷰 시스템에서 사용자들이 체감하는 리뷰 신뢰도 문제를 탐구한 프로젝트입니다.<br><br>인터뷰와 사용자 조사를 통해 리뷰에서 핵심 정보를 빠르게 파악하기
+                어렵고, 필요한 정보를 선별하는 <br />과정에서 피로도가 높아진다는
+                문제를 도출했습니다. 이를 해결하기 위해 리뷰를 Textless의<br />
                 시각적 요소 기반리뷰 시스템으로 재구성했습니다. 리뷰에서
-                보고싶은 <br />정보들을 기준으로 한눈에 이해할 수 있도록
+                보고싶은 정보들을 기준으로 한눈에 <br />이해할 수 있도록
                 설계하고, 신뢰도가 높은 사진리뷰의 점유율을 높일 수 있도록 리뷰
                 업로드 프로세스를 <br />단순화 하여, 리뷰를 더 빠르게
                 탐색·비교할 수 있고, 작성자는 신뢰도 높은 리뷰를 쉽게 작성할 수
-                있는 경험을 제공합니다. <br />리뷰의 이해 가능성과 신뢰 형성
-                과정을 중심으로 리뷰 시스템을 재정의한 미니 프로젝트입니다.</p>
+                있는 <br />경험을 제공합니다. 리뷰의 이해 가능성과 신뢰 형성
+                과정을 중심으로 리뷰 시스템을 <br />재정의한 미니 프로젝트입니다.</p>
+            </div>
+            <a href="./pofol_1/index.html" class="proj-card-link pf-nav">full portfolio <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></a>
           </div>
-          <a href="./pofol_1/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <div class="proj-card-right pimg-reveal">
+            <img alt="baemin Project" src="./images/bae1.png"/>
+          </div>
         </div>
-      </section>
-    </div>
-  </main>
+      </div>
+    </section>
 
-  <!-- FOOTER -->
-  <footer class="min-h-[40vh] flex flex-col bg-white border-t border-gray-100">
+  </div>
+
+  <footer class="min-h-[40vh] flex flex-col bg-white border-t border-gray-100" style="position:relative;z-index:20;">
     <div class="max-w-6xl w-full mx-auto px-6 py-20 rv">
       <h2 class="text-2xl font-light mb-6 tracking-wide">Contact me</h2>
       <div class="flex flex-col items-start space-y-2 text-[14px]">
@@ -411,185 +435,64 @@
 
 <script type="text/javascript">
 window.addEventListener('DOMContentLoaded', function() {
+  var dot=document.getElementById('PDY-cursor'),ring=document.getElementById('PDY-ring');
+  var mx=-300,my=-300,rx=-300,ry=-300;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+  document.addEventListener('mouseleave',function(){dot.style.opacity='0';ring.style.opacity='0';});
+  document.addEventListener('mouseenter',function(){dot.style.opacity='1';ring.style.opacity='1';});
+  function lerp(a,b,t){return a+(b-a)*t;}
+  (function tick(){dot.style.left=mx+'px';dot.style.top=my+'px';rx=lerp(rx,mx,.15);ry=lerp(ry,my,.15);ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+  document.querySelectorAll('a,button').forEach(function(el){el.addEventListener('mouseenter',function(){document.body.classList.remove('c-hover');document.body.classList.add('c-link');});el.addEventListener('mouseleave',function(){document.body.classList.remove('c-link');});});
+  document.querySelectorAll('.proj-card-right,.tcard').forEach(function(el){el.addEventListener('mouseenter',function(){document.body.classList.remove('c-link');document.body.classList.add('c-hover');});el.addEventListener('mouseleave',function(){document.body.classList.remove('c-hover');});});
 
-  /* ── 1. CUSTOM CURSOR ── */
-  var dot  = document.getElementById('PDY-cursor');
-  var ring = document.getElementById('PDY-ring');
-  var mx = -300, my = -300, rx = -300, ry = -300;
-  document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
-  document.addEventListener('mouseleave', function(){ dot.style.opacity='0'; ring.style.opacity='0'; });
-  document.addEventListener('mouseenter', function(){ dot.style.opacity='1'; ring.style.opacity='1'; });
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function tickCursor(){
-    dot.style.left=mx+'px'; dot.style.top=my+'px';
-    rx=lerp(rx,mx,0.15); ry=lerp(ry,my,0.15);
-    ring.style.left=rx+'px'; ring.style.top=ry+'px';
-    requestAnimationFrame(tickCursor);
-  }
-  tickCursor();
-  document.querySelectorAll('a,button').forEach(function(el){
-    el.addEventListener('mouseenter',function(){ document.body.classList.remove('c-hover'); document.body.classList.add('c-link'); });
-    el.addEventListener('mouseleave',function(){ document.body.classList.remove('c-link'); });
-  });
-  document.querySelectorAll('.pimg-wrap,.tcard').forEach(function(el){
-    el.addEventListener('mouseenter',function(){ document.body.classList.remove('c-link'); document.body.classList.add('c-hover'); });
-    el.addEventListener('mouseleave',function(){ document.body.classList.remove('c-hover'); });
-  });
+  var bar=document.getElementById('PDY-bar');
+  window.addEventListener('scroll',function(){var max=document.documentElement.scrollHeight-window.innerHeight;if(max>0)bar.style.width=(window.scrollY/max*100)+'%';},{passive:true});
 
-  /* ── 2. SCROLL PROGRESS BAR ── */
-  var bar = document.getElementById('PDY-bar');
-  window.addEventListener('scroll', function(){
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    if(max>0) bar.style.width=(window.scrollY/max*100)+'%';
-  },{passive:true});
+  var topBtn=document.getElementById('PDY-top');
+  window.addEventListener('scroll',function(){topBtn.classList.toggle('on',window.scrollY>300);},{passive:true});
+  topBtn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
 
-  /* ── 3. SCROLL TOP BUTTON ── */
-  var topBtn = document.getElementById('PDY-top');
-  window.addEventListener('scroll',function(){ topBtn.classList.toggle('on', window.scrollY>300); },{passive:true});
-  topBtn.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  var rvIO=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');rvIO.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){rvIO.observe(el);});
 
-  /* ── 4. REVEAL ON SCROLL ── */
-  var rvIO = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('on'); rvIO.unobserve(e.target); }
-    });
-  },{threshold:0.1, rootMargin:'0px 0px -30px 0px'});
-  document.querySelectorAll('.rv').forEach(function(el){ rvIO.observe(el); });
+  var infoList=document.getElementById('PDY-infolist');
+  if(infoList){var infoIO=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.querySelectorAll('.irow').forEach(function(r,i){setTimeout(function(){r.classList.add('on');},i*90);});infoIO.unobserve(e.target);}});},{threshold:0.15});infoIO.observe(infoList);}
 
-  var infoList = document.getElementById('PDY-infolist');
-  if(infoList){
-    var infoIO = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          e.target.querySelectorAll('.irow').forEach(function(r,i){
-            setTimeout(function(){ r.classList.add('on'); }, i*90);
-          });
-          infoIO.unobserve(e.target);
-        }
-      });
-    },{threshold:0.15});
-    infoIO.observe(infoList);
-  }
+  document.querySelectorAll('.pimg-reveal').forEach(function(wrap){var imgIO=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){wrap.style.opacity='1';wrap.style.transform='translateY(0)';imgIO.unobserve(wrap);}});},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});imgIO.observe(wrap);});
 
-  /* ── 5. PROJECT IMAGE SMOOTH REVEAL ──
-     Images fade+scale up when entering viewport, not a sudden pop */
-  document.querySelectorAll('.pimg-reveal').forEach(function(wrap){
-    /* start invisible */
-    wrap.style.opacity = '0';
-    wrap.style.transform = 'translateY(24px)';
-    wrap.style.transition = 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)';
+  var overlay=document.getElementById('PDY-overlay');
+  overlay.style.transition='none';overlay.style.transform='translateX(100%)';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){overlay.style.transition='transform 1.1s cubic-bezier(0.76,0,0.24,1)';});});
+  document.querySelectorAll('.pf-nav').forEach(function(btn){btn.addEventListener('click',function(e){var href=btn.getAttribute('href');if(!href||href==='#')return;e.preventDefault();overlay.style.transform='translateX(0%)';setTimeout(function(){window.location.href=href;},1500);});});
+  window.addEventListener('pageshow',function(ev){if(ev.persisted){overlay.style.transition='none';overlay.style.transform='translateX(-100%)';requestAnimationFrame(function(){requestAnimationFrame(function(){overlay.style.transition='transform 0.55s cubic-bezier(0.76,0,0.24,1)';overlay.style.transform='translateX(0%)';setTimeout(function(){overlay.style.transition='transform 0.7s cubic-bezier(0.76,0,0.24,1)';overlay.style.transform='translateX(100%)';},560);});});}});
 
-    var imgIO = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          wrap.style.opacity = '1';
-          wrap.style.transform = 'translateY(0)';
-          imgIO.unobserve(wrap);
-        }
-      });
-    },{threshold:0.12, rootMargin:'0px 0px -40px 0px'});
-    imgIO.observe(wrap);
-  });
+  var heroImg=document.getElementById('PDY-hero'),heroHdr=document.querySelector('header'),curS=1,tgtS=1;
+  (function tH(){curS=lerp(curS,tgtS,.06);if(heroImg)heroImg.style.transform='scale('+curS.toFixed(4)+')';requestAnimationFrame(tH);})();
+  window.addEventListener('scroll',function(){if(!heroHdr)return;tgtS=1+Math.min(1,Math.max(0,window.scrollY/heroHdr.offsetHeight))*0.12;},{passive:true});
 
-  /* ── 6. PAGE TRANSITION ──
-     Navigate: WHITE panel slides right→left (translateX 100%→0)
-     Back:     WHITE panel slides left→right (translateX -100%→0, then exits right) */
-  var overlay = document.getElementById('PDY-overlay');
+  var lastY=window.scrollY,dT;
+  window.addEventListener('scroll',function(){var d=window.scrollY-lastY;lastY=window.scrollY;var s=Math.max(-16,Math.min(16,d*0.45));document.querySelectorAll('.plabel').forEach(function(l){l.style.transition='transform 0.12s linear';l.style.transform='translateX('+s+'px)';});clearTimeout(dT);dT=setTimeout(function(){document.querySelectorAll('.plabel').forEach(function(l){l.style.transition='transform 0.6s cubic-bezier(0.16,1,0.3,1)';l.style.transform='translateX(0px)';});},150);},{passive:true});
 
-  /* Arrive on page: panel is already off to the right, no flash */
-  overlay.style.transition = 'none';
-  overlay.style.transform  = 'translateX(100%)';
+  document.querySelectorAll('.proj-card-right').forEach(function(wrap){wrap.addEventListener('mousemove',function(e){var r=wrap.getBoundingClientRect();var x=((e.clientX-r.left)/r.width-.5)*7;var y=((e.clientY-r.top)/r.height-.5)*4;wrap.style.transition='transform 0.1s ease';wrap.style.transform='perspective(900px) rotateY('+x+'deg) rotateX('+(-y)+'deg)';});wrap.addEventListener('mouseleave',function(){wrap.style.transition='transform 0.65s cubic-bezier(0.16,1,0.3,1)';wrap.style.transform='perspective(900px) rotateY(0deg) rotateX(0deg)';});});
 
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      overlay.style.transition = 'transform 1.1s cubic-bezier(0.76,0,0.24,1)';
-    });
-  });
-
-  /* Forward navigation: slide in from right */
-  document.querySelectorAll('.pf-nav').forEach(function(btn){
-    btn.addEventListener('click',function(e){
-      var href = btn.getAttribute('href');
-      if(!href || href==='#') return;
-      e.preventDefault();
-      overlay.style.transform = 'translateX(0%)';
-      setTimeout(function(){ window.location.href = href; }, 1500);
-    });
-  });
-
-  /* Back navigation: detect via pageshow persisted flag.
-     Slide panel in from LEFT, then exit to the RIGHT. */
-  window.addEventListener('pageshow', function(ev){
-    if(ev.persisted){
-      /* Instantly place panel on left side */
-      overlay.style.transition = 'none';
-      overlay.style.transform  = 'translateX(-100%)';
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          /* Slide to center (covers screen) */
-          overlay.style.transition = 'transform 0.55s cubic-bezier(0.76,0,0.24,1)';
-          overlay.style.transform  = 'translateX(0%)';
-          /* Then slide out to the right */
-          setTimeout(function(){
-            overlay.style.transition = 'transform 0.7s cubic-bezier(0.76,0,0.24,1)';
-            overlay.style.transform  = 'translateX(100%)';
-          }, 560);
-        });
-      });
+  /* JS로 실시간 zoom 계산: 모든 패널 중 최대 높이 기준으로 통일 */
+  function applyZoom() {
+    var panels = document.querySelectorAll('.proj-stack-inner');
+    var viewH  = window.innerHeight;
+    /* 1. 먼저 zoom 초기화해서 실제 높이 측정 */
+    panels.forEach(function(p){ p.style.zoom = ''; });
+    /* 2. 모든 패널 중 가장 큰 높이 찾기 */
+    var maxH = 0;
+    panels.forEach(function(p){ if(p.scrollHeight > maxH) maxH = p.scrollHeight; });
+    /* 3. 최대 높이가 뷰포트보다 크면 축소 — 단, 줄인 양의 절반만큼만 축소 */
+    if (maxH > viewH) {
+      var zFull = viewH / maxH;          /* 원래 꽉 맞는 비율 */
+      var z = ((1 + zFull) / 2).toFixed(4); /* 줄인 양의 절반만 축소 */
+      panels.forEach(function(p){ p.style.zoom = z; });
     }
-  });
-
-  /* ── 7. HERO PARALLAX — smooth lerp scale ── */
-  var heroImg    = document.getElementById('PDY-hero');
-  var heroHeader = document.querySelector('header');
-  var curScale   = 1.0;
-  var tgtScale   = 1.0;
-  function tickHero(){
-    curScale = lerp(curScale, tgtScale, 0.06);
-    if(heroImg) heroImg.style.transform = 'scale('+curScale.toFixed(4)+')';
-    requestAnimationFrame(tickHero);
   }
-  tickHero();
-  window.addEventListener('scroll', function(){
-    if(!heroHeader) return;
-    var progress = Math.min(1, Math.max(0, window.scrollY / heroHeader.offsetHeight));
-    tgtScale = 1.0 + progress * 0.12;
-  },{passive:true});
-
-  /* ── 8. PROJECT LABEL DRIFT ── */
-  var lastY = window.scrollY, driftT;
-  window.addEventListener('scroll',function(){
-    var delta = window.scrollY - lastY; lastY = window.scrollY;
-    var shift = Math.max(-16, Math.min(16, delta*0.45));
-    document.querySelectorAll('.plabel').forEach(function(lbl){
-      lbl.style.transition = 'transform 0.12s linear';
-      lbl.style.transform  = 'translateX('+shift+'px)';
-    });
-    clearTimeout(driftT);
-    driftT = setTimeout(function(){
-      document.querySelectorAll('.plabel').forEach(function(lbl){
-        lbl.style.transition = 'transform 0.6s cubic-bezier(0.16,1,0.3,1)';
-        lbl.style.transform  = 'translateX(0px)';
-      });
-    },150);
-  },{passive:true});
-
-
-  /* ── 10. PROJECT IMAGE 3D TILT ── */
-  document.querySelectorAll('.pimg-wrap').forEach(function(wrap){
-    wrap.addEventListener('mousemove',function(e){
-      var r=wrap.getBoundingClientRect();
-      var x=((e.clientX-r.left)/r.width -0.5)*7;
-      var y=((e.clientY-r.top) /r.height-0.5)*4;
-      wrap.style.transition='transform 0.1s ease';
-      wrap.style.transform='perspective(900px) rotateY('+x+'deg) rotateX('+(-y)+'deg)';
-    });
-    wrap.addEventListener('mouseleave',function(){
-      wrap.style.transition='transform 0.65s cubic-bezier(0.16,1,0.3,1)';
-      wrap.style.transform='perspective(900px) rotateY(0deg) rotateX(0deg)';
-    });
-  });
-
+  applyZoom();
+  window.addEventListener('resize', applyZoom, {passive:true});
 });
 </script>
 </body>
