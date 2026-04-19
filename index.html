@@ -116,18 +116,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .plabel { position: absolute; bottom: 2rem; left: 2rem; transition: transform .5s cubic-bezier(.16,1,.3,1); will-change: transform; }
     .pimg-wrap:hover .plabel { transform: translateY(-6px); }
 
-    /* ── Team card — drop shadow hover, no gradient ── */
+    /* ── Team card — drop shadow hover + auto-cycle active ── */
     .tcard {
-      transition: background .35s ease, transform .4s cubic-bezier(.16,1,.3,1),
-                  box-shadow .4s cubic-bezier(.16,1,.3,1);
+      transition: background .35s ease, transform .5s cubic-bezier(.16,1,.3,1),
+                  box-shadow .5s cubic-bezier(.16,1,.3,1);
     }
-    .tcard:hover {
+    .tcard:hover,
+    .tcard.tcard-active {
       background: #f9f9f9 !important;
       transform: translateX(3px) translateY(-3px);
       box-shadow: -4px 4px 24px rgba(75,75,75,.10), 0 2px 8px rgba(75,75,75,.06);
     }
     .tcard p { transition: opacity .3s ease, color .3s ease; }
-    .tcard:hover p { opacity: 1 !important; color: #1a1a1a; }
+    .tcard:hover p,
+    .tcard.tcard-active p { opacity: 1 !important; color: #1a1a1a; }
 
     /* ── Tool icon ── */
     .ticon { opacity: .75; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s ease; }
@@ -592,7 +594,55 @@ window.addEventListener('DOMContentLoaded', function() {
   },{passive:true});
 
 
-  /* ── 10. PROJECT IMAGE 3D TILT ── */
+  /* ── 9. TCARD AUTO-CYCLE ── */
+  (function(){
+    var cards   = Array.from(document.querySelectorAll('.tcard'));
+    if(!cards.length) return;
+
+    var cur        = 0;       // 현재 강조 인덱스
+    var isHovered  = false;   // 마우스가 어떤 카드 위에 있는지
+    var hoveredIdx = -1;
+    var timer      = null;
+    var INTERVAL   = 1800;    // 자동 이동 간격 (ms)
+
+    function setActive(idx){
+      cards.forEach(function(c){ c.classList.remove('tcard-active'); });
+      if(idx >= 0 && idx < cards.length){
+        cards[idx].classList.add('tcard-active');
+      }
+      cur = idx;
+    }
+
+    function startCycle(){
+      clearInterval(timer);
+      timer = setInterval(function(){
+        if(isHovered) return;          // 호버 중이면 멈춤
+        var next = (cur + 1) % cards.length;
+        setActive(next);
+      }, INTERVAL);
+    }
+
+    // 마우스 진입 — 해당 카드로 즉시 이동, 자동 순환 일시 정지
+    cards.forEach(function(card, idx){
+      card.addEventListener('mouseenter', function(){
+        isHovered  = true;
+        hoveredIdx = idx;
+        setActive(idx);
+      });
+      card.addEventListener('mouseleave', function(){
+        isHovered  = false;
+        hoveredIdx = -1;
+        // 마우스가 빠져나가면 현재 인덱스부터 다시 자동 순환 시작
+        startCycle();
+      });
+    });
+
+    // 초기 실행
+    setActive(0);
+    startCycle();
+  })();
+
+    /* ── 10. PROJECT IMAGE 3D TILT ── */
   document.querySelectorAll('.pimg-wrap').forEach(function(wrap){
     wrap.addEventListener('mousemove',function(e){
       var r=wrap.getBoundingClientRect();
