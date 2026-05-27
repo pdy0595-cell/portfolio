@@ -432,11 +432,37 @@
       .cert-preview.visible {
         opacity: 1;
         transform: translateY(0) scale(1);
+        pointer-events: auto;
       }
       .cert-preview img {
         width: 100%;
         height: auto;
         display: block;
+      }
+      /* 모바일: 중앙 고정 + 딤 배경 */
+      .cert-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9998;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+      .cert-backdrop.visible { opacity: 1; }
+      @media (max-width: 767px) {
+        .cert-backdrop { display: block; pointer-events: none; }
+        .cert-backdrop.visible { pointer-events: auto; }
+        .cert-preview {
+          width: calc(100vw - 48px);
+          max-width: 400px;
+          left: 50% !important;
+          top: 50% !important;
+          transform: translate(-50%, -50%) scale(0.97) !important;
+        }
+        .cert-preview.visible {
+          transform: translate(-50%, -50%) scale(1) !important;
+        }
       }
 
       /* ── Scroll top ── */
@@ -646,6 +672,7 @@
     <div id="PDY-overlay"></div>
 
     <!-- Certification hover previews -->
+    <div class="cert-backdrop" id="cert-backdrop"></div>
     <div class="cert-preview" id="cert-preview-1"><img src="./images/1.png" alt="GA4 Certificate"/></div>
     <div class="cert-preview" id="cert-preview-2"><img src="./images/2.png" alt="GA4 세미나 수료증"/></div>
     <div class="cert-preview" id="cert-preview-3"><img src="./images/3.png" alt="SQL 세미나 수료증"/></div>
@@ -1464,35 +1491,67 @@
         /* ── 11. CERTIFICATION HOVER PREVIEW ── */
         (function() {
           var previews = {};
+          var backdrop = document.getElementById('cert-backdrop');
+          var currentPreview = null;
+          var isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
           document.querySelectorAll('.cert-preview').forEach(function(el) {
             var id = el.id.replace('cert-preview-', '');
             previews[id] = el;
           });
 
-          document.querySelectorAll('.cert-link').forEach(function(link) {
-            var id = link.getAttribute('data-cert');
-            var preview = previews[id];
-            if (!preview) return;
+          function closeAll() {
+            if (currentPreview) {
+              currentPreview.classList.remove('visible');
+              currentPreview = null;
+            }
+            backdrop.classList.remove('visible');
+          }
 
-            link.addEventListener('mouseenter', function() {
-              preview.classList.add('visible');
+          // 모바일: 터치로 열기 + 배경 탭으로 닫기
+          if (isMobile) {
+            backdrop.addEventListener('click', closeAll);
+
+            document.querySelectorAll('.cert-link').forEach(function(link) {
+              link.style.cursor = 'pointer';
+              link.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var id = link.getAttribute('data-cert');
+                var preview = previews[id];
+                if (!preview) return;
+                if (currentPreview === preview) { closeAll(); return; }
+                closeAll();
+                currentPreview = preview;
+                preview.classList.add('visible');
+                backdrop.classList.add('visible');
+              });
             });
 
-            link.addEventListener('mousemove', function(e) {
-              var x = e.clientX + 20;
-              var y = e.clientY + 20;
-              // 화면 오른쪽 밖으로 나가면 왼쪽에 표시
-              if (x + 280 > window.innerWidth) x = e.clientX - 300;
-              // 화면 아래쪽 밖으로 나가면 위쪽에 표시
-              if (y + preview.offsetHeight > window.innerHeight) y = e.clientY - preview.offsetHeight - 10;
-              preview.style.left = x + 'px';
-              preview.style.top  = y + 'px';
-            });
+          // 데스크탑: 마우스 호버
+          } else {
+            document.querySelectorAll('.cert-link').forEach(function(link) {
+              var id = link.getAttribute('data-cert');
+              var preview = previews[id];
+              if (!preview) return;
 
-            link.addEventListener('mouseleave', function() {
-              preview.classList.remove('visible');
+              link.addEventListener('mouseenter', function() {
+                preview.classList.add('visible');
+              });
+
+              link.addEventListener('mousemove', function(e) {
+                var x = e.clientX + 20;
+                var y = e.clientY + 20;
+                if (x + 480 > window.innerWidth) x = e.clientX - 500;
+                if (y + preview.offsetHeight > window.innerHeight) y = e.clientY - preview.offsetHeight - 10;
+                preview.style.left = x + 'px';
+                preview.style.top  = y + 'px';
+              });
+
+              link.addEventListener('mouseleave', function() {
+                preview.classList.remove('visible');
+              });
             });
-          });
+          }
         })();
       });
     </script>
