@@ -72,22 +72,54 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     /* ── Header ── */
-    header { position: sticky; top: 0; z-index: 1; height: 100vh; overflow: hidden; background: white; }
-    .h-img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; will-change: transform; }
+    header { position: sticky; top: 0; z-index: 1; background: white; }
+    .hero-wrap {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 56.25vw;
+      min-height: 100vh;
+      min-height: 100svh;
+    }
+    @media (max-width: 767px) {
+      header { position: relative; }
+      .hero-wrap {
+        height: 56.25vw;
+        min-height: unset;
+      }
+    }
+    .h-img { width: 100%; height: 100%; object-fit: contain; object-position: center center; transform-origin: center center; will-change: transform; }
 
     /* ── Stacking sections ── */
     #about, main, footer { position: relative; z-index: 10; background: white; }
 
     /* ── Typography ── */
-    .proj-title { font-size: clamp(2rem,5vw,4rem); font-weight: 700; color: white; }
+    .proj-title { font-size: clamp(1rem, 4vw, 4rem); font-weight: 700; color: white; }
     .didot { font-family: "Didot","Bodoni MT",serif; }
 
-    /* ── Bounce ── */
-    @keyframes bigBounce {
-      0%,100% { transform: translateY(-20px); animation-timing-function: cubic-bezier(.8,0,1,1); }
-      50%      { transform: translateY(20px);  animation-timing-function: cubic-bezier(0,0,.2,1); }
+    /* ── Chevron cascade ── */
+    @keyframes chevronFlow {
+      0%   { opacity: 0;    transform: translateY(-6px); }
+      50%  { opacity: 1;    transform: translateY(0px);  }
+      100% { opacity: 0;    transform: translateY(6px);  }
     }
-    .bounce-anim { animation: bigBounce 1.8s infinite; }
+    .chevron-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    @media (max-width: 767px) {
+      .chevron-wrap { gap: 0; }
+    }
+    .chevron-wrap svg {
+      display: block;
+      opacity: 0;
+      animation: chevronFlow 1.6s ease-in-out infinite;
+    }
+    .chevron-wrap svg:nth-child(1) { animation-delay: 0s; }
+    .chevron-wrap svg:nth-child(2) { animation-delay: 0.2s; }
+    .chevron-wrap svg:nth-child(3) { animation-delay: 0.4s; }
 
     /* ── Reveal ── */
     .rv { opacity: 0; transform: translateY(32px); transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
@@ -168,6 +200,96 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .rv, .irow { transition: none; opacity: 1; transform: none; }
       .bounce-anim { animation: none; }
     }
+
+    /* ── Mobile: hide custom cursor on touch devices ── */
+    @media (hover: none) and (pointer: coarse) {
+      body { cursor: auto; }
+      #PDY-cursor, #PDY-ring { display: none; }
+    }
+
+    /* ── Mobile responsive overrides ── */
+    @media (max-width: 767px) {
+
+      /* About section spacing */
+      #about { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+
+      /* Section headings */
+      #about h2, main h2, footer h2 {
+        font-size: 2rem;
+      }
+
+      /* Info section: remove nowrap */
+      #about .whitespace-nowrap { white-space: normal; }
+
+      /* Profile image: move below info on mobile */
+      #about .flex.font-light.items-start.gap-8 {
+        flex-direction: column-reverse;
+        gap: 1.25rem;
+      }
+      #about .group.w-32.h-40 {
+        width: 6rem;
+        height: 7rem;
+        margin-top: 0;
+        align-self: flex-start;
+      }
+
+      /* Career / Education items: allow wrapping */
+      #about .flex.items-end.font-light,
+      #about .flex.items-baseline.font-light {
+        flex-wrap: wrap;
+        white-space: normal;
+        gap: 0.35rem;
+      }
+
+      /* Tools grid: slightly bigger tap targets */
+      #about .inline-grid.grid-cols-3 {
+        gap: 0.75rem 1rem;
+      }
+      #about .ticon {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      /* Strengths text: remove <br> visual side-effect by making it flow */
+      #about p.text-\[14px\].font-light.leading-relaxed { word-break: keep-all; }
+
+      /* Project sections */
+      main { padding-top: 2.5rem; }
+      .proj-card { margin-bottom: 4rem !important; }
+
+      /* Project label: smaller font on mobile */
+      .plabel { bottom: 1rem; left: 1rem; }
+      .proj-title { font-size: clamp(1.1rem, 4.5vw, 2rem); }
+
+      /* Project description: remove manual <br> effect by letting text flow */
+      .proj-card p { word-break: keep-all; }
+
+      /* Full portfolio button: full width on very small screens */
+      .btn-pf { width: 100%; justify-content: center; }
+
+      /* Project info flex: stack on mobile (already flex-col via md:flex-row) */
+      /* btn-pf shrink on mobile */
+
+      /* Scroll top button: smaller on mobile */
+      #PDY-top { width: 2.75rem; height: 2.75rem; font-size: 0.6rem; bottom: 1.25rem; right: 1.25rem; }
+
+      /* Footer */
+      footer .py-20 { padding-top: 3rem; padding-bottom: 3rem; }
+    }
+
+    @media (max-width: 480px) {
+      /* Extra-small screens */
+      .proj-title { font-size: clamp(0.95rem, 4vw, 1.5rem); }
+      .plabel { bottom: 0.75rem; left: 0.75rem; }
+      #about .grid { gap: 2.5rem; }
+      #about h3 { font-size: 1.15rem; }
+    }
+
+    /* ── Tablet (768px – 1023px) tweaks ── */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .proj-title { font-size: clamp(1.5rem, 3.5vw, 2.5rem); }
+      #about .flex.font-light.items-start { gap: 1.5rem; }
+    }
   </style>
 </head>
 <body class="bg-white font-sans selection:bg-gray-200 text-customText">
@@ -184,19 +306,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- HEADER -->
   <header class="w-full">
-    <div class="relative w-full h-full">
+    <div class="hero-wrap">
       <img id="PDY-hero" src="./images/title3.png" alt="Hero Banner" class="h-img grayscale opacity-90" />
       <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
-      <div class="absolute bottom-20 inset-x-0 flex justify-center z-10 bounce-anim">
-        <svg class="w-8 h-8 md:w-10 md:h-10" style="color:#4b4b4b" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-        </svg>
+      <div class="absolute inset-x-0 flex justify-center z-10" style="bottom: 10%;">
+        <div class="chevron-wrap">
+          <svg class="w-4 h-4 md:w-7 md:h-7" style="color:#4b4b4b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
+          <svg class="w-4 h-4 md:w-7 md:h-7" style="color:#4b4b4b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
+          <svg class="w-4 h-4 md:w-7 md:h-7" style="color:#4b4b4b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- ABOUT -->
-  <section id="about" class="py-24 px-6 flex justify-center">
+  <section id="about" class="py-14 md:py-24 px-4 md:px-6 flex justify-center">
     <div class="max-w-6xl w-full mx-auto">
       <div class="mb-20 w-fit rv">
         <h2 class="text-4xl  tracking-widest py-2 didot italic" style="color:#4b4b4b">About Me</h2>
@@ -227,7 +351,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Career</h3>
               <div class="flex flex-col text-[14px] gap-1">
-                <div class="flex items-baseline gap-3 whitespace-nowrap">
+                <div class="flex items-baseline flex-wrap gap-x-3 gap-y-0.5">
                   <span class="font-light">㈜DAON S&C</span>
                   <span class="opacity-40 text-[11px]">2023.07 - 2024.03</span>
                 </div>
@@ -244,7 +368,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Strengths</h3>
-            <p class="text-[14px] font-light leading-relaxed opacity-80">개발 실무 경험을 바탕으로 구현 가능성을 고려한 설계를 지향하며,<br/>이를 기반으로 팀 내 원활한 협업과 효율적인 커뮤니케이션을 이끌어냅니다.</p>
+            <p class="text-[14px] font-light leading-relaxed opacity-80">개발 실무 경험을 바탕으로 구현 가능성을 고려한 설계를 지향하며, 이를 기반으로 팀 내 원활한 협업과 효율적인 커뮤니케이션을 이끌어냅니다.</p>
           </section>
 
           <section class="rv">
@@ -262,11 +386,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <section class="rv">
             <h3 class="text-2xl font-medium mb-4 tracking-wide">Education</h3>
             <div class="space-y-4">
-              <div class="flex items-end font-light text-[14px] whitespace-nowrap gap-4">
-                <p class="opacity-80">혼합+스마트웹 &amp; 콘텐츠개발<br/>자바(JAVA) 기반 풀스택(스프링,Vue) 웹개발자 실무 양성과정</p>
+              <div class="flex items-end font-light text-[14px] gap-3 flex-wrap">
+                <p class="opacity-80">혼합+스마트웹 &amp; 콘텐츠개발 자바(JAVA) 기반 풀스택(스프링,Vue) 웹개발자 실무 양성과정</p>
                 <span class="text-[11px] opacity-40 shrink-0">2023.01 - 2023.06</span>
               </div>
-              <div class="flex items-baseline font-light text-[14px] whitespace-nowrap gap-4">
+              <div class="flex items-baseline font-light text-[14px] gap-3 flex-wrap">
                 <p class="opacity-80">맞춤형 프로덕트 디자이너 양성 과정</p>
                 <span class="text-[11px] opacity-40 shrink-0">2025.09 - 2026.01</span>
               </div>
@@ -278,10 +402,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="lg:col-span-7">
           <h3 class="text-2xl font-medium mb-4 tracking-tight rv">Voices from Teammates</h3>
           <div class="space-y-4">
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">아이디어와 의견이 많고 적극적이에요.<br/>팀장인 저의 중심을 잘 잡아주어 큰 도움이 됐어요.</p><p class="text-right text-[12px] opacity-40">-PL 김O아-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">협업을 좋아하고 의견수용도 적극적이에요.<br/>끝까지 고민하는 집요함이 있어요.</p><p class="text-right text-[12px] opacity-40">-UI디자인 함O연-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">버팀목 같아요. 팀의 든든한 나무 같은 팀원이었어요.<br/>정해진 시간 외에도 묵묵히 작업하는 모습에서 열정이 느껴졌어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 정O인-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">솔선수범해서 늦게까지 혼자서도 작업하는 게 대단해요.<br/>누구보다 한발 앞서 프로젝트를 생각해요.<br/>상대방의 기분을 상하지 않게 하는 말투가 장점이에요.</p><p class="text-right text-[12px] opacity-40">-UX기획 김O영-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">아이디어와 의견이 많고 적극적이에요.<br> 팀장인 저의 중심을 잘 잡아주어 큰 도움이 됐어요.</p><p class="text-right text-[12px] opacity-40">-PL 김O아-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">협업을 좋아하고 의견수용도 적극적이에요.<br> 끝까지 고민하는 집요함이 있어요.</p><p class="text-right text-[12px] opacity-40">-UI디자인 함O연-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">버팀목 같아요. 팀의 든든한 나무 같은 팀원이었어요.<br> 정해진 시간 외에도 묵묵히 작업하는 모습에서 열정이 느껴졌어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 정O인-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">솔선수범해서 늦게까지 혼자서도 작업하는 게 대단해요.<br> 누구보다 한발 앞서 프로젝트를 생각해요.<br> 상대방의 기분을 상하지 않게 하는 말투가 장점이에요.</p><p class="text-right text-[12px] opacity-40">-UX기획 김O영-</p></div>
             <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">의견이 충돌할 때 상황을 정리하고 방안을 제시해 줘서 막히는 부분을 잘 뚫어 주었어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 손O서-</p></div>
           </div>
         </div>
@@ -290,17 +414,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- PROJECTS -->
-  <main class="py-12 bg-gray-50">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="mb-20 w-fit rv">
+  <main class="py-10 md:py-12 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 md:px-6">
+      <div class="mb-10 md:mb-20 w-fit rv">
         <h2 class="text-4xl font-bold tracking-widest py-2 didot italic" style="color:#4b4b4b">Projects</h2>
       </div>
 
-      <section class="mb-32 proj-card" id="proj0">
+      <section class="mb-16 md:mb-32 proj-card" id="proj0">
         <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
           <img alt="moa Project" src="./images/moa.png"/>
           <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">신규 서비스 기획 프로젝트</h6></div>
+          <div class="plabel"><h6 class="proj-title italic">신규 서비스 기획 프로젝트</h6></div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
           <div class="max-w-4xl">
@@ -309,28 +433,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 65% · UX 70% · UI 70%</p>
             <br/>
             <p class="text-lg font-bold leading-snug mb-4 tracking-wider">감정과 일정 데이터를 한곳에 모아 기록·분석하고, 이를 소비 패턴과
-                연결해 <br />올바른 소비 습관 형성을 돕는 신규 자산관리 서비스
+                연결해 올바른 소비 습관 형성을 돕는 신규 자산관리 서비스
                 ‘moa’입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">‘moa’는 2026년 경제 트렌드로 주목받는 ‘필코노미(Fell +
-                conomy)’—감정이 소비를 주도하는 흐름—에 주목했습니다.<br />
-                개인의 감정 상태가 자산 관리에 직접적인 영향을 미친다는 관점에서
-                출발해, 감정·일정 데이터를 시각화하여 자신의 상태와 소비의
-                <br />상관관계를 직관적으로 인지할 수 있도록 설계했습니다. 또한
+            <p class="text-gray-500 text-sm font-light leading-relaxed mb-4 tracking-wider">‘moa’는 2026년 경제 트렌드로 주목받는 ‘필코노미(Fell +
+                conomy)’—감정이 소비를 주도하는 흐름—에 주목했습니다. 개인의 감정 상태가 자산 관리에 직접적인 영향을 미친다는 관점에서
+                출발해, 감정·일정 데이터를 시각화하여 자신의 상태와 소비의 상관관계를 직관적으로 인지할 수 있도록 설계했습니다. 또한
                 캐릭터와 보상 요소를 결합해 기록의 지속성과 몰입도를 높이고,
-                단순한 <br />가계부를 넘어 ‘감정 기반 소비 관리 경험’을
+                단순한 가계부를 넘어 ‘감정 기반 소비 관리 경험’을
                 제공합니다. 데이터 기반의 자기 이해를 통해 감정에 휘둘리는
-                소비가 아닌, 스스로 통제 <br />가능한 자산 흐름을 만들어가는 데
+                소비가 아닌, 스스로 통제 가능한 자산 흐름을 만들어가는 데
                 초점을 둔 신규 서비스 기획 프로젝트입니다.</p>
           </div>
-          <a href="./pofol_4/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <a href="./pofol_4/index.html" class="btn-pf pf-nav shrink-0"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
         </div>
       </section>
 
-      <section class="mb-32 proj-card" id="proj1">
+      <section class="mb-16 md:mb-32 proj-card" id="proj1">
         <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
           <img alt="Yeoptteok Project" src="./images/yt.png"/>
           <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">UX/UI 분석 및 개선 프로젝트</h6></div>
+          <div class="plabel"><h6 class="proj-title italic">UX/UI 분석 및 개선 프로젝트</h6></div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
           <div class="max-w-4xl">
@@ -338,29 +460,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6인</p>
             <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 75% · UX 70% · UI 80%</p>
             <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">기존 엽기떡볶이 앱의 전반적인 UX 문제를 분석하고,<br />
-                새로운 UI를 통해 이를 개선한 리디자인 프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
+            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">기존 엽기떡볶이 앱의 전반적인 UX 문제를 분석하고, 새로운 UI를 통해 이를 개선한 리디자인 프로젝트입니다.</p>
+            <p class="text-gray-500 text-sm font-light leading-relaxed mb-4 tracking-wider">
                 리서치와 설문을 통해 앱 디자인에 대한 불만과 엽떡의 양에 대한
-                부담감이라는 핵심 페인포인트를 도출했습니다.<br />
-                이를 바탕으로 보다 친절하고 섬세한 UX 흐름을 설계하고, 앱
-                진입부터 탐색·주문까지 이탈 없이 이어지는 새로운 시스템을
-                <br />제안했습니다. 또한 사용성 테스트를 통해 재구성한 주문
+                부담감이라는 핵심 페인포인트를 도출했습니다. 이를 바탕으로 보다 친절하고 섬세한 UX 흐름을 설계하고, 앱
+                진입부터 탐색·주문까지 이탈 없이 이어지는 새로운 시스템을 제안했습니다. 또한 사용성 테스트를 통해 재구성한 주문
                 과정, 메뉴 이해 구조, 정보 전달 방식을 검증하고 피드백을 반영해
-                완성도를 <br />높였습니다. 브랜드의 기존 운영 방식은
+                완성도를 높였습니다. 브랜드의 기존 운영 방식은
                 유지하면서도 변화한 소비 환경에 맞는 새로운 경험을 제안하여,
-                사용자가 더 쉽고 부담 없이 <br />주문할 수 있도록 서비스 흐름
+                사용자가 더 쉽고 부담 없이 주문할 수 있도록 서비스 흐름
                 전반을 개선했습니다.</p>
           </div>
-          <a href="./pofol_3/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <a href="./pofol_3/index.html" class="btn-pf pf-nav shrink-0"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
         </div>
       </section>
 
-      <section class="mb-32 proj-card" id="proj2">
+      <section class="mb-16 md:mb-32 proj-card" id="proj2">
         <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
           <img alt="socar Project" src="./images/socar.png"/>
           <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">VOC분석을 통한 솔루션 제안 프로젝트</h6></div>
+          <div class="plabel"><h6 class="proj-title italic">VOC분석을 통한 솔루션 제안 프로젝트</h6></div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
           <div class="max-w-4xl">
@@ -368,30 +487,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="opacity-60 text-sm text-gray-400">구성원&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6인</p>
             <p class="opacity-60 text-sm text-gray-400">기여도&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;기획 70% · UX 80% · UI 75%</p>
             <br/>
-            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">“명확한 요금을 인지하지 못한다”라는 VOC를 기반으로, <br />투명한
+            <p class="text-lg font-bold leading-snug mb-4 tracking-wider">“명확한 요금을 인지하지 못한다”라는 VOC를 기반으로, 투명한
                 정보 전달과 신뢰도 높은 사용 경험을 설계한 쏘카 UX 리디자인
                 프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
+            <p class="text-gray-500 text-sm font-light leading-relaxed mb-4 tracking-wider">
                 리서치를 통해 사용자가 요금 구조를 직관적으로 이해하지 못하고,
-                이용 과정 전반에서 최종 결제 금액에 대한 불안과 혼란을<br />
-                느낀다는 핵심 문제를 정의했습니다. 특히 이용 전·중·후에 안내되는
-                요금 정보가 분산되어 있어 금액 흐름을 한눈에 파악하기<br />
-                어렵다는 점에 주목했습니다. 이를 해결하기 위해 요금 안내 구조를
-                재정비하고 UX Writing과 Micro Copy를 개선해 정보의<br />
-                명확성을 높였습니다. 또한 실시간 요금 계산 기능을 제안해 변동
-                금액을 즉시 확인할 수 있도록 설계함으로써, 최종 결제에<br />
-                대한 부담을 줄이고 서비스에 대한 신뢰를 강화하는 것을 목표로
+                이용 과정 전반에서 최종 결제 금액에 대한 불안과 혼란을 느낀다는 핵심 문제를 정의했습니다. 특히 이용 전·중·후에 안내되는
+                요금 정보가 분산되어 있어 금액 흐름을 한눈에 파악하기 어렵다는 점에 주목했습니다. 이를 해결하기 위해 요금 안내 구조를
+                재정비하고 UX Writing과 Micro Copy를 개선해 정보의 명확성을 높였습니다. 또한 실시간 요금 계산 기능을 제안해 변동
+                금액을 즉시 확인할 수 있도록 설계함으로써, 최종 결제에 대한 부담을 줄이고 서비스에 대한 신뢰를 강화하는 것을 목표로
                 했습니다.</p>
           </div>
-          <a href="./pofol_2/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <a href="./pofol_2/index.html" class="btn-pf pf-nav shrink-0"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
         </div>
       </section>
 
-      <section class="mb-32 proj-card" id="proj3">
+      <section class="mb-16 md:mb-32 proj-card" id="proj3">
         <div class="pimg-wrap bg-[#1d1b26] aspect-[16/9] mb-8 pimg-reveal">
           <img alt="baemin Project" src="./images/bae.png"/>
           <div class="pimg-grad"></div>
-          <div class="plabel"><h6 class="text-4xl proj-title italic">핵심 기능 집중 개선 프로젝트</h6></div>
+          <div class="plabel"><h6 class="proj-title italic">핵심 기능 집중 개선 프로젝트</h6></div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-start gap-6 rv">
           <div class="max-w-4xl">
@@ -401,19 +516,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <br/>
             <p class="text-lg font-bold leading-snug mb-4 tracking-wider">현재의 리뷰 시스템에서 사용자들이 체감하는 리뷰 신뢰도 문제를
                 탐구한 프로젝트입니다.</p>
-            <p class="text-gray-500 text-sm font-light leading-snug mb-4 tracking-wider">
+            <p class="text-gray-500 text-sm font-light leading-relaxed mb-4 tracking-wider">
                 인터뷰와 사용자 조사를 통해 리뷰에서 핵심 정보를 빠르게 파악하기
-                어렵고, 필요한 정보를 선별하는 과정에서 피로도가 높아진다는
-                <br />문제를 도출했습니다. 이를 해결하기 위해 리뷰를 Textless의
+                어렵고, 필요한 정보를 선별하는 과정에서 피로도가 높아진다는 문제를 도출했습니다. 이를 해결하기 위해 리뷰를 Textless의
                 시각적 요소 기반리뷰 시스템으로 재구성했습니다. 리뷰에서
-                보고싶은 <br />정보들을 기준으로 한눈에 이해할 수 있도록
+                보고싶은 정보들을 기준으로 한눈에 이해할 수 있도록
                 설계하고, 신뢰도가 높은 사진리뷰의 점유율을 높일 수 있도록 리뷰
-                업로드 프로세스를 <br />단순화 하여, 리뷰를 더 빠르게
+                업로드 프로세스를 단순화 하여, 리뷰를 더 빠르게
                 탐색·비교할 수 있고, 작성자는 신뢰도 높은 리뷰를 쉽게 작성할 수
-                있는 경험을 제공합니다. <br />리뷰의 이해 가능성과 신뢰 형성
+                있는 경험을 제공합니다. 리뷰의 이해 가능성과 신뢰 형성
                 과정을 중심으로 리뷰 시스템을 재정의한 미니 프로젝트입니다.</p>
           </div>
-          <a href="./pofol_1/index.html" class="btn-pf pf-nav"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
+          <a href="./pofol_1/index.html" class="btn-pf pf-nav shrink-0"><span>Full portfolio</span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></a>
         </div>
       </section>
     </div>
@@ -421,13 +535,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- FOOTER -->
   <footer class="min-h-[40vh] flex flex-col bg-white border-t border-gray-100">
-    <div class="max-w-6xl w-full mx-auto px-6 py-20 rv">
+    <div class="max-w-6xl w-full mx-auto px-4 md:px-6 py-12 md:py-20 rv">
       <h2 class="text-4xl font-bold tracking-widest py-2 didot italic" style="color:#4b4b4b">Contact Me</h2>
       <br>
       <div class="flex flex-col items-start space-y-2 text-[14px]">
         <a class="clink" href="mailto:pdy0595@gmail.com">pdy0595@gmail.com</a>
         <a class="clink" href="tel:010-7645-0595">010-7645-0595</a>
-        <a class="clink" href="https://www.instagram.com/pdpdy_/" target="_blank">Instagram</a>
+        <!-- <a class="clink" href="https://www.instagram.com/pdpdy_/" target="_blank">Instagram</a> -->
       </div>
     </div>
     <img src="./images/end.png" alt="Footer Banner" class="w-full h-auto grayscale opacity-90"/>
@@ -442,8 +556,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 window.addEventListener('DOMContentLoaded', function() {
 
   /* ── 1. CUSTOM CURSOR ── */
+  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   var dot  = document.getElementById('PDY-cursor');
   var ring = document.getElementById('PDY-ring');
+  if (!isTouchDevice) {
   var mx = -300, my = -300, rx = -300, ry = -300;
   document.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
   document.addEventListener('mouseleave', function(){ dot.style.opacity='0'; ring.style.opacity='0'; });
@@ -464,6 +580,13 @@ window.addEventListener('DOMContentLoaded', function() {
     el.addEventListener('mouseenter',function(){ document.body.classList.remove('c-link'); document.body.classList.add('c-hover'); });
     el.addEventListener('mouseleave',function(){ document.body.classList.remove('c-hover'); });
   });
+  } else {
+    // Touch device: restore default cursor, hide custom cursor elements
+    document.body.style.cursor = 'auto';
+    if(dot) dot.style.display = 'none';
+    if(ring) ring.style.display = 'none';
+    function lerp(a,b,t){ return a+(b-a)*t; }
+  }
 
   /* ── 2. SCROLL PROGRESS BAR ── */
   var bar = document.getElementById('PDY-bar');
@@ -653,6 +776,7 @@ window.addEventListener('DOMContentLoaded', function() {
   })();
 
     /* ── 10. PROJECT IMAGE 3D TILT ── */
+  if (!isTouchDevice) {
   document.querySelectorAll('.pimg-wrap').forEach(function(wrap){
     wrap.addEventListener('mousemove',function(e){
       var r=wrap.getBoundingClientRect();
@@ -666,6 +790,7 @@ window.addEventListener('DOMContentLoaded', function() {
       wrap.style.transform='perspective(900px) rotateY(0deg) rotateX(0deg)';
     });
   });
+  }
 
 });
 </script>
