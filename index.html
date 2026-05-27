@@ -137,16 +137,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .pimg-wrap { position: relative; overflow: hidden; }
     .pimg-wrap img {
       width: 100%; height: 100%; object-fit: cover;
-      filter: grayscale(100%);
-      /* removed CSS transition — JS handles smooth reveal */
     }
-    .pimg-wrap:hover img { filter: grayscale(0%); }
-    .pimg-wrap img { transition: filter .6s ease; }
 
-    .pimg-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 55%); transition: opacity .5s ease; }
-    .pimg-wrap:hover .pimg-grad { opacity: .75; }
-    .plabel { position: absolute; bottom: 2rem; left: 2rem; transition: transform .5s cubic-bezier(.16,1,.3,1); will-change: transform; }
-    .pimg-wrap:hover .plabel { transform: translateY(-6px); }
+    .pimg-grad { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 55%); }
+    .plabel { position: absolute; bottom: 2rem; left: 2rem; }
 
     /* ── Team card — drop shadow hover + auto-cycle active ── */
     .tcard {
@@ -402,10 +396,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="lg:col-span-7">
           <h3 class="text-2xl font-medium mb-4 tracking-tight rv">Voices from Teammates</h3>
           <div class="space-y-4">
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">아이디어와 의견이 많고 적극적이에요.<br> 팀장인 저의 중심을 잘 잡아주어 큰 도움이 됐어요.</p><p class="text-right text-[12px] opacity-40">-PL 김O아-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">협업을 좋아하고 의견수용도 적극적이에요.<br> 끝까지 고민하는 집요함이 있어요.</p><p class="text-right text-[12px] opacity-40">-UI디자인 함O연-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">버팀목 같아요. 팀의 든든한 나무 같은 팀원이었어요.<br> 정해진 시간 외에도 묵묵히 작업하는 모습에서 열정이 느껴졌어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 정O인-</p></div>
-            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">솔선수범해서 늦게까지 혼자서도 작업하는 게 대단해요.<br> 누구보다 한발 앞서 프로젝트를 생각해요.<br> 상대방의 기분을 상하지 않게 하는 말투가 장점이에요.</p><p class="text-right text-[12px] opacity-40">-UX기획 김O영-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">아이디어와 의견이 많고 적극적이에요. 팀장인 저의 중심을 잘 잡아주어 큰 도움이 됐어요.</p><p class="text-right text-[12px] opacity-40">-PL 김O아-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">협업을 좋아하고 의견수용도 적극적이에요. 끝까지 고민하는 집요함이 있어요.</p><p class="text-right text-[12px] opacity-40">-UI디자인 함O연-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">버팀목 같아요. 팀의 든든한 나무 같은 팀원이었어요. 정해진 시간 외에도 묵묵히 작업하는 모습에서 열정이 느껴졌어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 정O인-</p></div>
+            <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">솔선수범해서 늦게까지 혼자서도 작업하는 게 대단해요. 누구보다 한발 앞서 프로젝트를 생각해요. 상대방의 기분을 상하지 않게 하는 말투가 장점이에요.</p><p class="text-right text-[12px] opacity-40">-UX기획 김O영-</p></div>
             <div class="tcard bg-gray-50/50 p-7 rounded-[20px] rv"><p class="text-[14px] leading-relaxed font-light opacity-70 mb-4">의견이 충돌할 때 상황을 정리하고 방안을 제시해 줘서 막히는 부분을 잘 뚫어 주었어요.</p><p class="text-right text-[12px] opacity-40">-UX기획 손O서-</p></div>
           </div>
         </div>
@@ -776,21 +770,8 @@ window.addEventListener('DOMContentLoaded', function() {
   })();
 
     /* ── 10. PROJECT IMAGE 3D TILT ── */
-  if (!isTouchDevice) {
-  document.querySelectorAll('.pimg-wrap').forEach(function(wrap){
-    wrap.addEventListener('mousemove',function(e){
-      var r=wrap.getBoundingClientRect();
-      var x=((e.clientX-r.left)/r.width -0.5)*7;
-      var y=((e.clientY-r.top) /r.height-0.5)*4;
-      wrap.style.transition='transform 0.1s ease';
-      wrap.style.transform='perspective(900px) rotateY('+x+'deg) rotateX('+(-y)+'deg)';
-    });
-    wrap.addEventListener('mouseleave',function(){
-      wrap.style.transition='transform 0.65s cubic-bezier(0.16,1,0.3,1)';
-      wrap.style.transform='perspective(900px) rotateY(0deg) rotateX(0deg)';
-    });
-  });
-  }
+
+
 
 });
 </script>
