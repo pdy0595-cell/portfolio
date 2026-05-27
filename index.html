@@ -439,29 +439,35 @@
         height: auto;
         display: block;
       }
-      /* 모바일: 중앙 고정 + 딤 배경 */
+      /* 딤 배경 — 항상 존재, 기본 숨김 */
       .cert-backdrop {
-        display: none;
         position: fixed;
         inset: 0;
         background: rgba(0,0,0,0.5);
         z-index: 9998;
         opacity: 0;
+        pointer-events: none;
         transition: opacity 0.25s ease;
       }
-      .cert-backdrop.visible { opacity: 1; }
+      .cert-backdrop.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      /* 모바일: 중앙 배치 */
       @media (max-width: 767px) {
-        .cert-backdrop { display: block; pointer-events: none; }
-        .cert-backdrop.visible { pointer-events: auto; }
         .cert-preview {
           width: calc(100vw - 48px);
           max-width: 400px;
           left: 50% !important;
           top: 50% !important;
-          transform: translate(-50%, -50%) scale(0.97) !important;
+          margin-left: 0 !important;
+          margin-top: 0 !important;
+        }
+        .cert-preview:not(.visible) {
+          transform: translate(-50%, -50%) scale(0.97);
         }
         .cert-preview.visible {
-          transform: translate(-50%, -50%) scale(1) !important;
+          transform: translate(-50%, -50%) scale(1);
         }
       }
 
@@ -1493,7 +1499,8 @@
           var previews = {};
           var backdrop = document.getElementById('cert-backdrop');
           var currentPreview = null;
-          var isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+          // CSS 미디어쿼리와 동일한 기준으로 모바일 판단
+          var isMobile = window.matchMedia('(max-width: 767px)').matches;
 
           document.querySelectorAll('.cert-preview').forEach(function(el) {
             var id = el.id.replace('cert-preview-', '');
@@ -1508,7 +1515,7 @@
             backdrop.classList.remove('visible');
           }
 
-          // 모바일: 터치로 열기 + 배경 탭으로 닫기
+          // 모바일: 탭으로 열기 + 배경 탭으로 닫기
           if (isMobile) {
             backdrop.addEventListener('click', closeAll);
 
