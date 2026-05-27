@@ -401,6 +401,44 @@
       }
       #proj3 .btn-pf:hover { background: #c2f0ee; box-shadow: 0 10px 30px rgba(25,112,115,0.2); }
 
+      /* ── Certification hover image ── */
+      .cert-item {
+        position: relative;
+        display: inline;
+      }
+      .cert-link {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(0,0,0,0.3);
+        cursor: default;
+        transition: text-decoration-color 0.3s ease, opacity 0.3s ease;
+      }
+      .cert-link:hover {
+        text-decoration-color: rgba(0,0,0,0.8);
+        opacity: 1;
+      }
+      .cert-preview {
+        position: fixed;
+        width: 480px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.1);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(8px) scale(0.97);
+        transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+        z-index: 9999;
+      }
+      .cert-preview.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      .cert-preview img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
       /* ── Scroll top ── */
       #PDY-top {
         opacity: 0;
@@ -606,6 +644,11 @@
     <div id="PDY-ring"></div>
     <div id="PDY-bar"></div>
     <div id="PDY-overlay"></div>
+
+    <!-- Certification hover previews -->
+    <div class="cert-preview" id="cert-preview-1"><img src="./images/1.png" alt="GA4 Certificate"/></div>
+    <div class="cert-preview" id="cert-preview-2"><img src="./images/2.png" alt="GA4 세미나 수료증"/></div>
+    <div class="cert-preview" id="cert-preview-3"><img src="./images/3.png" alt="SQL 세미나 수료증"/></div>
 
     <!-- HEADER -->
     <header class="w-full">
@@ -817,8 +860,11 @@
             <section class="rv">
               <h3 class="text-2xl font-medium mb-4 tracking-wide">Education</h3>
               <div class="space-y-4 font-light text-[14px]">
-                <p class="opacity-80">혼합+스마트웹 &amp; 콘텐츠개발 자바(JAVA) 기반 풀스택(스프링,Vue) 웹개발자 실무 양성과정&nbsp;&nbsp;&nbsp; <span class="text-[11px] opacity-60">2023.01 - 2023.06</span></p>
-                <p class="opacity-80">맞춤형 프로덕트 디자이너 양성 과정&nbsp;&nbsp;&nbsp; <span class="text-[11px] opacity-60">2025.09 - 2026.01</span></p>
+                <p class="opacity-80">혼합+스마트웹 &amp; 콘텐츠개발 자바(JAVA) 기반 풀스택(스프링,Vue) 웹개발자 실무 양성과정 <span class="text-[11px] opacity-60">2023.01 - 2023.06</span></p>
+                <p class="opacity-80">맞춤형 프로덕트 디자이너 양성 과정 <span class="text-[11px] opacity-60">2025.09 - 2026.01</span></p>
+                <p class="opacity-80"><span class="cert-link" data-cert="1">GA4 취득</span> <span class="text-[11px] opacity-60">2025.11.04</span></p>
+                <p class="opacity-80"><span class="cert-link" data-cert="2">Google Analytics 교육참여</span> <span class="text-[11px] opacity-60">2026.04.14</span></p>
+                <p class="opacity-80"><span class="cert-link" data-cert="3">SQL 교육 참여</span> <span class="text-[11px] opacity-60">2026.04.28</span></p>
               </div>
             </section>
           </div>
@@ -1414,6 +1460,40 @@
         })();
 
         /* ── 10. PROJECT IMAGE 3D TILT ── */
+
+        /* ── 11. CERTIFICATION HOVER PREVIEW ── */
+        (function() {
+          var previews = {};
+          document.querySelectorAll('.cert-preview').forEach(function(el) {
+            var id = el.id.replace('cert-preview-', '');
+            previews[id] = el;
+          });
+
+          document.querySelectorAll('.cert-link').forEach(function(link) {
+            var id = link.getAttribute('data-cert');
+            var preview = previews[id];
+            if (!preview) return;
+
+            link.addEventListener('mouseenter', function() {
+              preview.classList.add('visible');
+            });
+
+            link.addEventListener('mousemove', function(e) {
+              var x = e.clientX + 20;
+              var y = e.clientY + 20;
+              // 화면 오른쪽 밖으로 나가면 왼쪽에 표시
+              if (x + 280 > window.innerWidth) x = e.clientX - 300;
+              // 화면 아래쪽 밖으로 나가면 위쪽에 표시
+              if (y + preview.offsetHeight > window.innerHeight) y = e.clientY - preview.offsetHeight - 10;
+              preview.style.left = x + 'px';
+              preview.style.top  = y + 'px';
+            });
+
+            link.addEventListener('mouseleave', function() {
+              preview.classList.remove('visible');
+            });
+          });
+        })();
       });
     </script>
   </body>
