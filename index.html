@@ -115,8 +115,35 @@
         border-color: rgba(75, 75, 75, 0.2);
       }
 
-      /* ── Scroll progress ── */
-      #PDY-bar {
+      /* ── Image cursor follower ── */
+      #img-cursor {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        background: #1a1a1a;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        border-radius: 9999px;
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0;
+        transform: translate(0, 0) scale(0.85);
+        transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16,1,0.3,1);
+        white-space: nowrap;
+      }
+      #img-cursor.visible {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      #img-cursor svg {
+        width: 11px;
+        height: 11px;
+        flex-shrink: 0;
+      }
         position: fixed;
         top: 0;
         left: 0;
@@ -365,6 +392,7 @@
         transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
       }
       .btn-pf:hover svg { transform: rotate(0deg) translate(3px, 0); }
+      .btn-pf.img-hovered svg { transform: rotate(0deg) translate(3px, 0); }
 
       /* moa — 딥 퍼플 / 호버: 연한 라벤더 단색 */
       #proj0 .btn-pf {
@@ -375,28 +403,32 @@
                     box-shadow 0.5s ease, transform 0.4s cubic-bezier(0.16,1,0.3,1),
                     color 0.3s ease;
       }
-      #proj0 .btn-pf:hover { background: #ddd0f7; box-shadow: 0 10px 30px rgba(49,17,100,0.2); }
+      #proj0 .btn-pf:hover,
+      #proj0 .btn-pf.img-hovered { background: #ddd0f7; box-shadow: 0 10px 30px rgba(49,17,100,0.2); color: #111; }
 
       /* yt — 딥 레드 / 호버: 연한 핑크 단색 */
       #proj1 .btn-pf {
         background-image: linear-gradient(90deg, #3e1010 0%, #682828 40%, #f7d0d0 100%);
         box-shadow: 0 4px 18px rgba(104,40,40,0.4);
       }
-      #proj1 .btn-pf:hover { background: #f7d0d0; box-shadow: 0 10px 30px rgba(104,40,40,0.2); }
+      #proj1 .btn-pf:hover,
+      #proj1 .btn-pf.img-hovered { background: #f7d0d0; box-shadow: 0 10px 30px rgba(104,40,40,0.2); color: #111; }
 
       /* socar — 딥 블루 / 호버: 연한 스카이 단색 */
       #proj2 .btn-pf {
         background-image: linear-gradient(90deg, #0a1e42 0%, #153369 40%, #c8daf7 100%);
         box-shadow: 0 4px 18px rgba(21,51,105,0.4);
       }
-      #proj2 .btn-pf:hover { background: #c8daf7; box-shadow: 0 10px 30px rgba(21,51,105,0.2); }
+      #proj2 .btn-pf:hover,
+      #proj2 .btn-pf.img-hovered { background: #c8daf7; box-shadow: 0 10px 30px rgba(21,51,105,0.2); color: #111; }
 
       /* bae — 딥 틸 / 호버: 연한 민트 단색 */
       #proj3 .btn-pf {
         background-image: linear-gradient(90deg, #0c4244 0%, #197073 40%, #c2f0ee 100%);
         box-shadow: 0 4px 18px rgba(25,112,115,0.4);
       }
-      #proj3 .btn-pf:hover { background: #c2f0ee; box-shadow: 0 10px 30px rgba(25,112,115,0.2); }
+      #proj3 .btn-pf:hover,
+      #proj3 .btn-pf.img-hovered { background: #c2f0ee; box-shadow: 0 10px 30px rgba(25,112,115,0.2); color: #111; }
 
       /* ── Certification hover image ── */
       .cert-item {
@@ -673,6 +705,10 @@
     <div id="PDY-ring"></div>
     <div id="PDY-bar"></div>
     <div id="PDY-overlay"></div>
+    <div id="img-cursor">
+      <span>full portfolio</span>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+    </div>
 
     <!-- Certification hover previews -->
     <div class="cert-backdrop" id="cert-backdrop"></div>
@@ -1489,7 +1525,43 @@
           startCycle();
         })();
 
-        /* ── 10. PROJECT IMAGE 3D TILT ── */
+        /* ── 10. PROJECT IMAGE → BUTTON HOVER SYNC + CURSOR LABEL ── */
+        var imgCursor = document.getElementById('img-cursor');
+
+        var projColors = {
+          'proj0': { bg: '#ddd0f7', color: '#111' },
+          'proj1': { bg: '#f7d0d0', color: '#111' },
+          'proj2': { bg: '#c8daf7', color: '#111' },
+          'proj3': { bg: '#c2f0ee', color: '#111' },
+        };
+
+        document.querySelectorAll('.proj-card').forEach(function(card) {
+          var img = card.querySelector('.pimg-wrap');
+          var btn = card.querySelector('.btn-pf');
+          if (!img || !btn) return;
+
+          var colors = projColors[card.id] || { bg: '#1a1a1a', color: '#fff' };
+
+          img.style.cursor = 'none';
+          img.addEventListener('click', function() {
+            window.location.href = btn.getAttribute('href');
+          });
+
+          img.addEventListener('mouseenter', function() {
+            btn.classList.add('img-hovered');
+            imgCursor.style.background = colors.bg;
+            imgCursor.style.color = colors.color;
+            imgCursor.classList.add('visible');
+          });
+          img.addEventListener('mousemove', function(e) {
+            imgCursor.style.left = (e.clientX + 16) + 'px';
+            imgCursor.style.top  = (e.clientY - 50) + 'px';
+          });
+          img.addEventListener('mouseleave', function() {
+            btn.classList.remove('img-hovered');
+            imgCursor.classList.remove('visible');
+          });
+        });
 
         /* ── 11. CERTIFICATION HOVER PREVIEW ── */
         (function() {
