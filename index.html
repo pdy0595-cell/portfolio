@@ -1223,7 +1223,7 @@
     </button>
 
     <script type="text/javascript">
-      window.addEventListener("DOMContentLoaded", function () {
+      (function () {
         /* ── 1. CUSTOM CURSOR ── */
         var isTouchDevice =
           "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -1322,7 +1322,7 @@
               }
             });
           },
-          { threshold: 0.1, rootMargin: "0px 0px -30px 0px" },
+          { threshold: 0.05, rootMargin: "0px 0px -20px 0px" },
         );
         document.querySelectorAll(".rv").forEach(function (el) {
           rvIO.observe(el);
@@ -1527,6 +1527,7 @@
 
         /* ── 10. PROJECT IMAGE → BUTTON HOVER SYNC + CURSOR LABEL ── */
         var imgCursor = document.getElementById('img-cursor');
+        var isImgMobile = window.matchMedia('(max-width: 767px)').matches;
 
         var projColors = {
           'proj0': { bg: '#ddd0f7', color: '#111' },
@@ -1542,24 +1543,26 @@
 
           var colors = projColors[card.id] || { bg: '#1a1a1a', color: '#fff' };
 
-          img.style.cursor = 'none';
+          if (!isImgMobile) {
+            img.style.cursor = 'none';
+            img.addEventListener('mouseenter', function() {
+              btn.classList.add('img-hovered');
+              imgCursor.style.background = colors.bg;
+              imgCursor.style.color = colors.color;
+              imgCursor.classList.add('visible');
+            });
+            img.addEventListener('mousemove', function(e) {
+              imgCursor.style.left = (e.clientX + 16) + 'px';
+              imgCursor.style.top  = (e.clientY - 50) + 'px';
+            });
+            img.addEventListener('mouseleave', function() {
+              btn.classList.remove('img-hovered');
+              imgCursor.classList.remove('visible');
+            });
+          }
+
           img.addEventListener('click', function() {
             window.location.href = btn.getAttribute('href');
-          });
-
-          img.addEventListener('mouseenter', function() {
-            btn.classList.add('img-hovered');
-            imgCursor.style.background = colors.bg;
-            imgCursor.style.color = colors.color;
-            imgCursor.classList.add('visible');
-          });
-          img.addEventListener('mousemove', function(e) {
-            imgCursor.style.left = (e.clientX + 16) + 'px';
-            imgCursor.style.top  = (e.clientY - 50) + 'px';
-          });
-          img.addEventListener('mouseleave', function() {
-            btn.classList.remove('img-hovered');
-            imgCursor.classList.remove('visible');
           });
         });
 
@@ -1629,7 +1632,7 @@
             });
           }
         })();
-      });
+      })();
     </script>
   </body>
 </html>
